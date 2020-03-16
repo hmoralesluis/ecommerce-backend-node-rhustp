@@ -5,6 +5,11 @@ import helmet from 'helmet';
 import compression from 'compression';
 import cors from 'cors';
 
+// import routes
+import indexRoutes from './routes/indexRoutes';
+import ProductRouter from './routes/ProductRoutes';
+import CategoryRoutes from './routes/CategoryRoutes';
+
 // Server Class
 class Server {
     public app: express.Application;
@@ -12,6 +17,7 @@ class Server {
     constructor() {
         this.app = express();
         this.config();
+        this.routes();
     }
 
     public config(): void {
@@ -41,7 +47,15 @@ class Server {
         this.app.use(compression());
         this.app.use(cors());
     }
-    
+
+    public routes(): void {
+        const router: express.Router = express.Router();
+
+        this.app.use('/', indexRoutes);
+        this.app.use('/api/products', ProductRouter);
+        this.app.use('/api/categories', CategoryRoutes);
+    }
+
     public start(): void {
         this.app.listen(this.app.get('port'), () => {
             console.log('Server is listenning on port', this.app.get('port'));
