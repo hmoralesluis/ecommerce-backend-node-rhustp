@@ -22,6 +22,7 @@ class Server {
 
     public config(): void {
         const MONGO_URI = 'mongodb://localhost/ecommerce';
+        mongoose.set('useFindAndModify', false);
         mongoose.connect(MONGO_URI || process.env.MONGODB_URL, {
             useNewUrlParser: true,
             useCreateIndex: true,
