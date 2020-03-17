@@ -2,9 +2,7 @@ import { Schema, model } from 'mongoose';
 
 const ProductSchema = new Schema({
     title: { type: String, required: true },
-    /*categories: [
-        {type: Schema.Types.ObjectId,ref: 'Category'}
-    ],*/
+    category: {type: Schema.Types.ObjectId,ref: 'Category'},
     price: { type: Number },
     oldPrice: {type: Number},
     description: { type: String },

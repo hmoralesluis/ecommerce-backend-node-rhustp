@@ -30,8 +30,8 @@ class ProductRouter {
 
     public async createProduct(req: Request, res: Response): Promise<void>{
         try {
-            const { title, price, old_price, picture, description } = req.body;
-            const newProduct= new Product({title, price, old_price, picture, description});
+            const { title, category, price, old_price, picture, description } = req.body;
+            const newProduct= new Product({title, category, price, old_price, picture, description});
             await newProduct.save();
             res.json({status: res.status, data: newProduct});
         } catch (error)  {
