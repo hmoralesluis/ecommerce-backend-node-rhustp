@@ -21,7 +21,7 @@ class ProductRouter {
 
     public async getProduct(req: Request, res: Response): Promise<void> {
         try {
-            const product = await Product.find({ title: { $regex: req.params.title } });
+            const product = await Product.findOne({ _id: req.params.id });
             res.json(product);
         } catch (error)  {
             console.log(error);
@@ -42,8 +42,8 @@ class ProductRouter {
 
     public async updateProduct(req: Request, res: Response): Promise<void>{
         try {
-            const { title } = req.params;
-            const product = await Product.findOneAndUpdate({title}, req.body);
+            const { id } = req.params;
+            const product = await Product.findOneAndUpdate({_id: id}, req.body, {new:true});
             res.json({status: res.status, data: product});
         } catch (error)  {
             console.log(error);
@@ -52,7 +52,7 @@ class ProductRouter {
 
     public async deleteProduct(req: Request, res: Response): Promise<void> {
         try {
-            await Product.findOneAndRemove({ title: req.params.title });
+            await Product.findOneAndRemove({ _id: req.params.id });
             res.json({ response: 'Product deleted Successfully' });
         } catch (error)  {
             console.log(error);
@@ -61,10 +61,10 @@ class ProductRouter {
 
     routes() {
         this.router.get('/', this.getProducts);
-        this.router.get('/:title', this.getProduct);
+        this.router.get('/:id', this.getProduct);
         this.router.post('/', this.createProduct);
-        this.router.put('/:title', this.updateProduct);
-        this.router.delete('/:title', this.deleteProduct);
+        this.router.put('/:id', this.updateProduct);
+        this.router.delete('/:id', this.deleteProduct);
     }
 }
 

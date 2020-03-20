@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
 
 import Category from '../models/Category';
+import Product from '../models/Product';
 
 class CategoryRouter {
     router: Router;
@@ -21,7 +22,7 @@ class CategoryRouter {
 
     public async getCategory(req: Request, res: Response): Promise<void> {
         try {
-            const category = await Category.find({ title: { $regex: req.params.title } });
+            const category = await Category.findOne({ _id: req.params.id });
             res.json(category);
         } catch (error)  {
             console.log(error);
@@ -41,8 +42,8 @@ class CategoryRouter {
 
     public async updateCategory(req: Request, res: Response): Promise<void>{
         try {
-            const { title } = req.params;
-            const category = await Category.findOneAndUpdate({title}, req.body);
+            const { id } = req.params;
+            const category = await Category.findOneAndUpdate({_id: id}, req.body, {new:true});
             res.json({status: res.status, data: category});
         } catch (error)  {
             console.log(error);
@@ -51,8 +52,18 @@ class CategoryRouter {
 
     public async deleteCategory(req: Request, res: Response): Promise<void> {
         try {
-            await Category.findOneAndRemove({ title: req.params.title });
+            await Category.findOneAndRemove({ _id: req.params.id });
             res.json({ response: 'Product deleted Successfully' });
+        } catch (error)  {
+            console.log(error);
+        } 
+    }
+
+    public async productsByCategory(req: Request, res: Response): Promise<void> {
+        try {
+            const { id } = req.params;
+            const products = await Product.find().where({'category':id});
+            res.json({ products });
         } catch (error)  {
             console.log(error);
         } 
@@ -60,10 +71,11 @@ class CategoryRouter {
 
     routes() {
         this.router.get('/', this.getCategories);
-        this.router.get('/:title', this.getCategory);
+        this.router.get('/:id', this.getCategory);
         this.router.post('/', this.createCategory);
-        this.router.put('/:title', this.updateCategory);
-        this.router.delete('/:title', this.deleteCategory);
+        this.router.put('/:id', this.updateCategory);
+        this.router.delete('/:id', this.deleteCategory);
+        this.router.get('/:id/products', this.productsByCategory);
     }
 }
 
