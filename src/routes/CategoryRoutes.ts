@@ -69,6 +69,20 @@ class CategoryRouter {
         } 
     }
 
+    public async checkCategoryExist(req: Request, res: Response): Promise<any> {
+        try {
+            const category = await Category.findOne({ title: req.body.title });
+            if (category) {
+                return res.json({categoryExist: true});
+            } else {
+                return res.json({categoryExist: false});
+            }
+            
+        } catch (error)  {
+            console.log(error);
+        }    
+    }
+
     routes() {
         this.router.get('/', this.getCategories);
         this.router.get('/:id', this.getCategory);
@@ -76,6 +90,7 @@ class CategoryRouter {
         this.router.put('/:id', this.updateCategory);
         this.router.delete('/:id', this.deleteCategory);
         this.router.get('/:id/products', this.productsByCategory);
+        this.router.post('/checkCategory', this.checkCategoryExist);
     }
 }
 
